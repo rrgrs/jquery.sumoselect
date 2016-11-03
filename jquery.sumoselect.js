@@ -26,6 +26,7 @@
             outputAsCSV: false,           // true to POST data as csv ( false for Html control array ie. default select )
             csvSepChar: ',',              // separation char in csv mode
             okCancelInMulti: false,       // display ok cancel buttons in desktop mode multiselect also.
+            closeInMulti: false,          // display close button in desktop mode multiselect also.
             triggerChangeCombined: true,  // im multi select mode wether to trigger change event on individual selection or combined selection.
             selectAll: false,             // to display select all button in multiselect mode.|| also select all will not be available on mobile devices.
 
@@ -33,7 +34,7 @@
             searchText: 'Search...',      // placeholder for search input
             noMatch: 'No matches for "{0}"',
             prefix: '',                   // some prefix usually the field name. eg. '<b>Hello</b>'
-            locale: ['OK', 'Cancel', 'Select All'],  // all text that is used. don't change the index.
+            locale: ['OK', 'Cancel', 'Select All', 'Close'],  // all text that is used. don't change the index.
             up: false                     // set true to open upside.
         }, options);
 
@@ -198,7 +199,15 @@
                         O._cnbtn();
                         O.hideOpts();
                     });
-                    O.optDiv.append($('<div class="MultiControls">').append(O.okbtn).append(O.cancelBtn));
+                    O.closeBtn = $('<p class="btnCancel">'+settings.locale[3]+'</p>').click(function () {
+                        O.hideOpts();
+                    });
+                    if(settings.okCancelInMulti) {
+                      O.optDiv.append($('<div class="MultiControls">').append(O.okbtn).append(O.cancelBtn));
+                    }
+                    if(settings.closeInMulti) {
+                      O.optDiv.append($('<div class="MultiControls">').append(O.closeBtn));
+                    }
                 },
 
                 _cnbtn:function(){
@@ -532,7 +541,7 @@
                     if (!O.is_floating) O.optDiv.css('height', '');
 
                     //toggle class according to okCancelInMulti flag only when it is not floating
-                    O.optDiv.toggleClass('okCancelInMulti', settings.okCancelInMulti && !O.is_floating);
+                    O.optDiv.toggleClass('okCancelInMulti', (settings.okCancelInMulti || settings.closeInMulti) && !O.is_floating);
                 },
 
                 //HELPERS FOR OUTSIDERS
